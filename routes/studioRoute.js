@@ -1,11 +1,27 @@
 const express = require("express");
-const router = express.Router();
-const studioController = require("../controllers/studioController");
+const {
+  createStudio,
+  getAllStudios,
+  getStudioById,
+  updateStudio,
+  deleteStudio,
+} = require("../controllers/studioController");
 
-router.post("/register", studioController.registerStudio);
-router.get("/:id", studioController.getStudio);
-router.put("/:id", studioController.updateStudio);
-router.delete("/:id", studioController.deleteStudio);
-router.get("/", studioController.getAllStudios);
+const router = express.Router();
+
+// Create a new studio
+router.post("/", createStudio);
+
+// Get all studios
+router.get("/", getAllStudios);
+
+// Get a single studio by ID
+router.get("/:id", getStudioById);
+
+// Update a studio by ID
+router.put("/:id", updateStudio);
+
+// Delete a studio by ID
+router.delete("/:id", deleteStudio);
 
 module.exports = router;
