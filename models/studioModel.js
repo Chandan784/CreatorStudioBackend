@@ -9,9 +9,8 @@ const studioSchema = new mongoose.Schema({
   landmark: { type: String },
   location: { type: String, required: true },
   city: { type: String, required: true },
-  area: { type: String, required: true },
   pincode: { type: String, required: true },
-  facilities: { type: String, required: true },
+  facilities: [{ type: String }],
   images: [{ type: String }], // Array of image URLs or file paths
   equipment: [
     {

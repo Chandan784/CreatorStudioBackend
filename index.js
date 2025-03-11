@@ -4,6 +4,11 @@ const cors = require("cors");
 const connectDB = require("./config/db");
 const studioRoutes = require("./routes/studioRoute");
 const authRoutes = require("./routes/authRoutes");
+const bookingRoutes = require("./routes/bookingRoutes");
+const availabilityRoutes = require("./routes/availabilityRoutes");
+const requirementRoutes = require("./routes/requirementRoutes");
+
+const { google } = require("googleapis");
 
 const app = express();
 
@@ -23,6 +28,11 @@ connectDB();
 // Routes
 app.use("/api/v1/studio", studioRoutes); // Studio routes
 app.use("/api/v1/auth", authRoutes); // Auth routes
+app.use("/api/v1/bookings", bookingRoutes);
+app.use("/api/v1/availability", availabilityRoutes);
+app.use("/api/v1/requirements", requirementRoutes);
+
+// Google Meet route
 
 // Error handling middleware
 app.use((err, req, res, next) => {
