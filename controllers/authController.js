@@ -6,10 +6,10 @@ const sendEmail = require("../utils/sendMail");
 // 🔹 Register User with Activation Email
 exports.register = async (req, res) => {
   try {
-    const { email, password, role, name } = req.body; // Add name to the request body
+    const { email, password, role, name, phoneNumber } = req.body; // Add name to the request body
 
     // ✅ Trim inputs to remove spaces
-    if (!email || !password || !role || !name) {
+    if (!email || !password || !role || !name || !phoneNumber) {
       return res.status(400).json({ message: "All fields are required" });
     }
 
@@ -24,7 +24,7 @@ exports.register = async (req, res) => {
 
     // ✅ Generate activation token
     const activationToken = jwt.sign(
-      { name, email, password: hashedPassword, role }, // Include name in the payload
+      { name, email, password: hashedPassword, role, phoneNumber }, // Include name in the payload
       process.env.JWT_SECRET,
       { expiresIn: "1d" }
     );
@@ -64,6 +64,7 @@ exports.activateAccount = async (req, res) => {
       email: decoded.email,
       password: decoded.password, // Already hashed during registration
       role: decoded.role,
+      phoneNumber: decoded.phoneNumber,
     });
     await user.save();
 
