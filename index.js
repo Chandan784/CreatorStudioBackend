@@ -8,6 +8,11 @@ const bookingRoutes = require("./routes/bookingRoutes");
 const availabilityRoutes = require("./routes/availabilityRoutes");
 const requirementRoutes = require("./routes/requirementRoutes");
 const leadRoutes = require("./routes/leadRoutes");
+const InfluencerRoutes = require("./routes/influencerRoutes");
+const clinetRoutes = require("./routes/clientRoutes");
+const planRoutes = require("./routes/planRoutes");
+const deliverableRoutes = require("./routes/delivaerableRoutes");
+const projectRoutes = require("./routes/projectRoutes");
 
 const { google } = require("googleapis");
 
@@ -33,6 +38,11 @@ app.use("/api/v1/bookings", bookingRoutes);
 app.use("/api/v1/availability", availabilityRoutes);
 app.use("/api/v1/requirements", requirementRoutes);
 app.use("/api/v1/leads", leadRoutes);
+app.use("/api/v1/influencer", InfluencerRoutes);
+app.use("/api/v1/clients", clinetRoutes);
+app.use("/api/v1/plans", planRoutes);
+app.use("/api/v1/deliverables", deliverableRoutes);
+app.use("/api/v1/projects", projectRoutes);
 
 // Google Meet route
 
