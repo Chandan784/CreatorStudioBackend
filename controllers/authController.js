@@ -83,20 +83,20 @@ exports.login = async (req, res) => {
     // ✅ Validate inputs
     if (!email || !password) {
       return res
-        .status(400)
+        .status(200)
         .json({ message: "Email and password are required" });
     }
 
     // ✅ Find user by email
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(400).json({ message: "User not found" });
+      return res.status(200).json({ message: "User not found" });
     }
 
     // ✅ Compare passwords
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(400).json({ message: "Invalid credentials" });
+      return res.status(200).json({ message: "Invalid credentials" });
     }
 
     // ✅ Generate JWT Token
@@ -121,13 +121,13 @@ exports.forgotPassword = async (req, res) => {
     const { email } = req.body;
 
     if (!email) {
-      return res.status(400).json({ message: "Email is required" });
+      return res.status(200).json({ message: "Email is required" });
     }
 
     // ✅ Check if user exists
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(400).json({ message: "User not found" });
+      return res.status(200).json({ message: "User not found" });
     }
 
     // ✅ Generate reset token
