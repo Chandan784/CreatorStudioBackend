@@ -162,7 +162,7 @@ exports.resetPassword = async (req, res) => {
     const { newPassword } = req.body;
 
     if (!newPassword) {
-      return res.status(400).json({ message: "New password is required" });
+      return res.status(200).json({ message: "New password is required" });
     }
 
     // ✅ Verify token
@@ -174,9 +174,10 @@ exports.resetPassword = async (req, res) => {
       resetToken: token,
       resetTokenExpires: { $gt: Date.now() },
     });
+    console.log(`User`, user);
 
     if (!user) {
-      return res.status(400).json({ message: "Invalid or expired token" });
+      return res.status(200).json({ message: "Invalid or expired token" });
     }
 
     // ✅ Hash new password and update
