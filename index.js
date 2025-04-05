@@ -1,6 +1,12 @@
 require("dotenv").config();
 const express = require("express");
+const mongoose = require("mongoose");
+const session = require("express-session");
+const MongoStore = require("connect-mongo");
+const cookieParser = require("cookie-parser");
 const cors = require("cors");
+
+// Routes
 const connectDB = require("./config/db");
 const studioRoutes = require("./routes/studioRoute");
 const authRoutes = require("./routes/authRoutes");
@@ -14,26 +20,44 @@ const planRoutes = require("./routes/planRoutes");
 const deliverableRoutes = require("./routes/delivaerableRoutes");
 const projectRoutes = require("./routes/projectRoutes");
 
-const { google } = require("googleapis");
-
 const app = express();
 
-// Middleware
+// ✅ Middleware
 app.use(express.json());
+app.use(cookieParser());
+
+// ✅ CORS Setup (corrected)
 app.use(
   cors({
-    origin: "*", // Allow requests from any origin (for development)
-    methods: "GET,POST,PUT,DELETE",
-    allowedHeaders: "Content-Type,Authorization",
+    origin: "http://localhost:3000", // Replace with your frontend URL
+    credentials: true,
   })
 );
 
-// Connect Database
+// ✅ Session Middleware
+app.use(
+  session({
+    secret: process.env.JWT_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      httpOnly: true,
+      secure: false, // Change to true in production with HTTPS
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    },
+    store: MongoStore.create({
+      mongoUrl: process.env.MONGO_URI,
+      collectionName: "sessions",
+    }),
+  })
+);
+
+// ✅ Connect to MongoDB
 connectDB();
 
-// Routes
-app.use("/api/v1/studio", studioRoutes); // Studio routes
-app.use("/api/v1/auth", authRoutes); // Auth routes
+// ✅ Routes
+app.use("/api/v1/studio", studioRoutes);
+app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/bookings", bookingRoutes);
 app.use("/api/v1/availability", availabilityRoutes);
 app.use("/api/v1/requirements", requirementRoutes);
@@ -44,13 +68,14 @@ app.use("/api/v1/plans", planRoutes);
 app.use("/api/v1/deliverables", deliverableRoutes);
 app.use("/api/v1/projects", projectRoutes);
 
-// Google Meet route
-
-// Error handling middleware
+// ✅ Global Error Handler
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({ success: false, message: "Something went wrong!" });
 });
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+// ✅ Start Server
+const PORT = process.env.PORT || 8000;
+app.listen(PORT, () => {
+  console.log(`✅ Server running on http://localhost:${PORT}`);
+});
