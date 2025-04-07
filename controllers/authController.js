@@ -8,12 +8,12 @@ exports.register = async (req, res) => {
     const { email, password, role, name, phoneNumber } = req.body;
 
     if (!email || !password || !role || !name || !phoneNumber) {
-      return res.status(400).json({ message: "All fields are required" });
+      return res.status(200).json({ message: "All fields are required" });
     }
 
     let user = await User.findOne({ email });
     if (user) {
-      return res.status(400).json({ message: "User already exists" });
+      return res.status(200).json({ message: "User already exists" });
     }
 
     const hashedPassword = await bcrypt.hash(password.trim(), 10);
@@ -48,7 +48,7 @@ exports.activateAccount = async (req, res) => {
 
     let user = await User.findOne({ email: decoded.email });
     if (user) {
-      return res.status(400).json({ message: "User already exists" });
+      return res.status(200).json({ message: "User already exists" });
     }
 
     user = new User({
@@ -68,9 +68,12 @@ exports.activateAccount = async (req, res) => {
 
     res.json({ message: "Account activated successfully" });
   } catch (error) {
+    console.log(error, "Activation error");
+    
     console.error("Activation error:", error);
     res.status(500).json({ message: "Invalid or expired token" });
   }
+  
 };
 // 🔹 Login User
 exports.login = async (req, res) => {
@@ -79,13 +82,13 @@ exports.login = async (req, res) => {
 
     if (!email || !password) {
       return res
-        .status(400)
+        .status(200)
         .json({ message: "Email and password are required" });
     }
 
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(400).json({ message: "User not found" });
+      return res.status(200).json({ message: "User not found" });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
